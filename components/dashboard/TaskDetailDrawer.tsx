@@ -116,7 +116,7 @@ export function TaskDetailDrawer({
       const { data, error } = await supabase
         .from('tasks')
         .insert({
-          module_id,
+          module_id: moduleId,
           parent_id: task.id,
           title: newSubtaskTitle,
           start_date: startDate,
