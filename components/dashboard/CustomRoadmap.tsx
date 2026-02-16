@@ -239,14 +239,24 @@ export function CustomRoadmap({
   }
 
   const timelineWidth = days.length * dayWidth;
+  const effectiveTimelineWidth = Math.max(timelineWidth, 800);
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-zinc-950">
+      {/* Single horizontal scroll container so header + timeline stay in sync on mobile */}
+      <div
+        className="flex-1 min-h-0 overflow-x-auto overflow-y-auto"
+        style={{ minWidth: 0 }}
+      >
+        <div
+          className="flex flex-col h-full"
+          style={{ minWidth: `${250 + effectiveTimelineWidth}px` }}
+        >
       {/* Header - Two Row */}
-      <div className="sticky top-0 z-20 border-b border-white/10 bg-zinc-950/95 backdrop-blur-sm">
+      <div className="shrink-0 z-20 border-b border-white/10 bg-zinc-950/95 backdrop-blur-sm">
         {/* Top Row - Month & Year */}
         <div className="relative h-10 border-b border-white/5">
-          <div className="flex" style={{ width: `${250 + timelineWidth}px` }}>
+          <div className="flex" style={{ width: `${250 + effectiveTimelineWidth}px` }}>
             {/* Sidebar spacer */}
             <div className="w-[250px] border-r border-white/10 bg-zinc-900/50 px-4 py-2">
               <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
@@ -318,7 +328,7 @@ export function CustomRoadmap({
 
         {/* Bottom Row - Individual Days */}
         <div className="relative h-8">
-          <div className="flex" style={{ width: `${250 + timelineWidth}px` }}>
+          <div className="flex" style={{ width: `${250 + effectiveTimelineWidth}px` }}>
             {/* Sidebar spacer */}
             <div className="w-[250px] border-r border-white/10 bg-zinc-900/50" />
 
@@ -344,7 +354,7 @@ export function CustomRoadmap({
       </div>
 
       {/* Body - Sidebar + Timeline */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Left Sidebar - Task Names (Fixed) */}
         <div className="w-[250px] flex-shrink-0 border-r border-white/10 bg-zinc-900/30">
           <div className="h-full overflow-y-auto">
@@ -362,11 +372,15 @@ export function CustomRoadmap({
           </div>
         </div>
 
-        {/* Right Timeline (Scrollable) */}
-        <div className="flex-1 overflow-auto">
+        {/* Right Timeline (Scrollable) - min-width for horizontal scroll on mobile */}
+        <div className="flex-1 min-w-0 overflow-x-auto overflow-y-auto">
           <div
             className="relative"
-            style={{ width: `${timelineWidth}px`, minHeight: '100%' }}
+            style={{
+              width: `${effectiveTimelineWidth}px`,
+              minWidth: '800px',
+              minHeight: '100%',
+            }}
           >
             {/* Grid Background - Vertical lines for each day */}
             <div className="absolute inset-0">
@@ -477,6 +491,8 @@ export function CustomRoadmap({
               );
             })}
           </div>
+        </div>
+      </div>
         </div>
       </div>
     </div>

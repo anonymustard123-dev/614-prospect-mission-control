@@ -181,9 +181,9 @@ export function TaskDetailDrawer({
         onClick={onClose}
       />
 
-      {/* Drawer */}
+      {/* Drawer - full width on mobile */}
       <div
-        className={`fixed right-0 top-0 z-[120] h-full w-[500px] transform border-l border-white/10 bg-zinc-950/95 backdrop-blur-2xl shadow-2xl transition-transform duration-300 ease-out ${
+        className={`fixed right-0 top-0 z-[120] h-full w-full md:w-[500px] transform border-l border-white/10 bg-zinc-950/95 backdrop-blur-2xl shadow-2xl transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

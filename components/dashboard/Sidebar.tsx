@@ -422,7 +422,7 @@ export function Sidebar({
   return (
     <>
       {/* Desktop: fixed sidebar (hidden on mobile) */}
-      <div className="fixed left-0 top-0 z-40 hidden h-screen md:block">
+      <div className="fixed left-0 top-0 z-40 hidden h-screen md:flex">
         {sidebarContent}
       </div>
 
