@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Gantt Chart Dark Theme Overrides */
+.gantt-container {
+  background: #18181b;
+  color: #e4e4e7;
+}
+
+.gantt-container .gantt-table-header {
+  background: #27272a;
+  color: #e4e4e7;
+  border-color: #3f3f46;
+}
+
+.gantt-container .gantt-table-body {
+  background: #18181b;
+}
+
+.gantt-container .gantt-task-list-header {
+  background: #27272a;
+  color: #e4e4e7;
+  border-color: #3f3f46;
+}
+
+.gantt-container .gantt-task-list-item {
+  background: #18181b;
+  color: #e4e4e7;
+  border-color: #3f3f46;
+}
+
+.gantt-container .gantt-task-list-item:hover {
+  background: #27272a;
+}
+
+/* Mapbox controls dark theme and positioning */
+.mapboxgl-ctrl-group {
+  background: rgba(39, 39, 42, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.mapboxgl-ctrl-group button {
+  color: #e4e4e7 !important;
+}
+
+.mapboxgl-ctrl-group button:hover {
+  background: rgba(63, 63, 70, 0.8) !important;
+}
+
+/* Position map controls to bottom-right */
+.mapboxgl-ctrl-bottom-right {
+  bottom: 20px !important;
+  right: 20px !important;
+}
+
+.mapboxgl-ctrl-bottom-left {
+  bottom: 20px !important;
+  left: 20px !important;
+}
+
+/* Vignette gradient effect */
+.bg-gradient-radial {
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+/* Smooth checkbox animations */
+@keyframes checkmark {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkbox-checked {
+  animation: checkmark 0.2s ease-out;
+}
