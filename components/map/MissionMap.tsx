@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState, useRef, useImperativeHandle, forwardRef, useMemo } from 'react';
-import Map, { Marker, DragEvent, MapRef } from 'react-map-gl';
+import Map, { Marker, MapRef } from 'react-map-gl';
+import type { MarkerDragEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Module, Task } from '@/types';
 import { supabase } from '@/lib/supabase';
@@ -135,7 +136,7 @@ export const MissionMap = forwardRef<MissionMapRef, MissionMapProps>(
       return statusMap;
     }, [modules, tasks]);
 
-    const handleMarkerDragEnd = async (moduleId: string, event: DragEvent) => {
+    const handleMarkerDragEnd = async (moduleId: string, event: MarkerDragEvent) => {
       const { lng, lat } = event.lngLat;
 
       try {
