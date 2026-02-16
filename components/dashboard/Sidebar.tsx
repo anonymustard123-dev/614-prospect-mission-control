@@ -25,6 +25,10 @@ import { EditModuleDialog } from './EditModuleDialog';
 
 interface SidebarProps {
   onModuleClick: (module: Module) => void;
+  /** Mobile drawer: when true, sidebar is shown as overlay (used on small screens) */
+  isMobileOpen?: boolean;
+  /** Called when user closes the mobile drawer (backdrop or after selecting a module) */
+  onMobileClose?: () => void;
 }
 
 interface ModuleWithTasks extends Module {
@@ -71,7 +75,15 @@ const computedStatusIcons = {
   no_tasks: AlertCircle,
 };
 
-export function Sidebar({ onModuleClick }: SidebarProps) {
+export function Sidebar({
+  onModuleClick,
+  isMobileOpen = false,
+  onMobileClose,
+}: SidebarProps) {
+  const handleModuleClick = (module: Module) => {
+    onModuleClick(module);
+    onMobileClose?.();
+  };
   const [modulesWithTasks, setModulesWithTasks] = useState<ModuleWithTasks[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
@@ -79,11 +91,22 @@ export function Sidebar({ onModuleClick }: SidebarProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingModule, setEditingModule] = useState<Module | null>(null);
+  const [drawerAnimatingIn, setDrawerAnimatingIn] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     setCurrentTime(new Date());
   }, []);
+
+  useEffect(() => {
+    if (isMobileOpen) {
+      setDrawerAnimatingIn(true);
+      const id = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setDrawerAnimatingIn(false));
+      });
+      return () => cancelAnimationFrame(id);
+    }
+  }, [isMobileOpen]);
 
   useEffect(() => {
     loadModulesAndTasks();
@@ -232,8 +255,8 @@ export function Sidebar({ onModuleClick }: SidebarProps) {
           modulesWithTasks.length
         ).toFixed(4);
 
-  return (
-    <div className="fixed left-0 top-0 z-50 h-screen w-80 border-r border-white/10 bg-black/40 backdrop-blur-xl">
+  const sidebarContent = (
+    <div className="flex h-full w-80 flex-col border-r border-white/10 bg-black/40 backdrop-blur-xl">
       {/* Header */}
       <div className="border-b border-white/10 px-6 py-5">
         <h1 className="text-xl font-bold tracking-wider text-white">
@@ -294,7 +317,7 @@ export function Sidebar({ onModuleClick }: SidebarProps) {
                   className="group relative w-full rounded border border-white/10 bg-black/30 p-3 transition-all hover:border-white/20 hover:bg-black/50 backdrop-blur-sm"
                 >
                   <button
-                    onClick={() => onModuleClick(module)}
+                    onClick={() => handleModuleClick(module)}
                     className="w-full text-left"
                   >
                     <div className="flex items-start gap-3">
@@ -394,5 +417,34 @@ export function Sidebar({ onModuleClick }: SidebarProps) {
         onModuleUpdated={loadModulesAndTasks}
       />
     </div>
+  );
+
+  return (
+    <>
+      {/* Desktop: fixed sidebar (hidden on mobile) */}
+      <div className="fixed left-0 top-0 z-40 hidden h-screen md:block">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile: drawer overlay + sliding panel */}
+      {isMobileOpen && (
+        <>
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden"
+            onClick={onMobileClose}
+          />
+          <div
+            className="fixed left-0 top-0 z-50 h-full w-80 shadow-2xl transition-transform duration-300 ease-out md:hidden"
+            style={{
+              transform: drawerAnimatingIn ? 'translateX(-100%)' : 'translateX(0)',
+            }}
+          >
+            {sidebarContent}
+          </div>
+        </>
+      )}
+    </>
   );
 }
